@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SampleAMMeter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IQP-nw-Yc1" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
+                                <rect key="frame" x="137.5" y="70" width="100" height="100"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="IQP-nw-Yc1" secondAttribute="height" multiplier="1:1" id="duR-65-yda"/>
+                                    <constraint firstAttribute="width" constant="100" id="tvG-2N-aqH"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3h-rW-kzB" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
+                                <rect key="frame" x="112.5" y="258.5" width="150" height="150"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="A3h-rW-kzB" secondAttribute="height" multiplier="1:1" id="Hzb-hU-KFb"/>
+                                    <constraint firstAttribute="width" constant="150" id="exJ-XJ-UR9"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="meterBorderLineColor">
+                                        <color key="value" red="0.15686274510000001" green="0.31764705879999999" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="meterColor">
+                                        <color key="value" red="0.0" green="1" blue="0.4481443007" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="valueHandColor">
+                                        <color key="value" red="1" green="1" blue="0.55294117649999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="valueLabelTextColor">
+                                        <color key="value" red="1" green="0.025295937550000001" blue="0.16108618750000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="valueIndexColor">
+                                        <color key="value" red="1" green="0.80392156859999997" blue="0.82352941180000006" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XY3-UY-mmS" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
+                                <rect key="frame" x="87.5" y="457" width="200" height="200"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="XY3-UY-mmS" secondAttribute="height" multiplier="1:1" id="kYy-TC-YBF"/>
+                                    <constraint firstAttribute="width" constant="200" id="zhc-GK-xMX"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="meterBorderLineWidth">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="valueHandWidth">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4z9-3v-h4d">
+                                <rect key="frame" x="137" y="49" width="100" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="5Uf-2C-umd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ba-z6-gul">
+                                <rect key="frame" x="112" y="237.5" width="150" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="IBV-Z2-goc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eMl-8Z-cu4">
+                                <rect key="frame" x="87" y="436" width="200" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="NF2-RI-y9L"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="4z9-3v-h4d" firstAttribute="centerX" secondItem="IQP-nw-Yc1" secondAttribute="centerX" id="D01-Ef-nYS"/>
+                            <constraint firstItem="IQP-nw-Yc1" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="NCV-UX-pe4"/>
+                            <constraint firstItem="IQP-nw-Yc1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Qvj-TU-DfL"/>
+                            <constraint firstItem="A3h-rW-kzB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ttn-NS-W2X"/>
+                            <constraint firstItem="eMl-8Z-cu4" firstAttribute="centerX" secondItem="XY3-UY-mmS" secondAttribute="centerX" id="UfM-T9-3vP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XY3-UY-mmS" secondAttribute="bottom" constant="10" id="VXZ-FF-kRD"/>
+                            <constraint firstItem="IQP-nw-Yc1" firstAttribute="top" secondItem="4z9-3v-h4d" secondAttribute="bottom" id="Wzs-y4-ejP"/>
+                            <constraint firstItem="A3h-rW-kzB" firstAttribute="top" secondItem="0ba-z6-gul" secondAttribute="bottom" id="d6W-jH-PFB"/>
+                            <constraint firstItem="0ba-z6-gul" firstAttribute="centerX" secondItem="A3h-rW-kzB" secondAttribute="centerX" id="fXP-0K-AZv"/>
+                            <constraint firstItem="4z9-3v-h4d" firstAttribute="width" secondItem="IQP-nw-Yc1" secondAttribute="width" id="mqt-sa-9Yn"/>
+                            <constraint firstItem="XY3-UY-mmS" firstAttribute="top" secondItem="eMl-8Z-cu4" secondAttribute="bottom" id="ok6-G3-FpD"/>
+                            <constraint firstItem="eMl-8Z-cu4" firstAttribute="width" secondItem="XY3-UY-mmS" secondAttribute="width" id="qou-1i-JQ0"/>
+                            <constraint firstItem="A3h-rW-kzB" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="wBA-n0-SAI"/>
+                            <constraint firstItem="0ba-z6-gul" firstAttribute="width" secondItem="A3h-rW-kzB" secondAttribute="width" id="wGF-ql-Sht"/>
+                            <constraint firstItem="XY3-UY-mmS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="yA2-5e-J0d"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="label1" destination="4z9-3v-h4d" id="Ub1-Ld-x9n"/>
+                        <outlet property="label2" destination="0ba-z6-gul" id="xaL-PL-r0O"/>
+                        <outlet property="label3" destination="eMl-8Z-cu4" id="QeT-5R-Y5c"/>
+                        <outlet property="mView1" destination="IQP-nw-Yc1" id="mzQ-lj-BTO"/>
+                        <outlet property="mView2" destination="A3h-rW-kzB" id="4Pp-6f-klY"/>
+                        <outlet property="mView3" destination="XY3-UY-mmS" id="PL0-It-q6r"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
