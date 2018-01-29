@@ -1,6 +1,6 @@
 //
 //  AMMeterView.swift
-//  TestProject
+//  AMMeterView, https://github.com/adventam10/AMMeterView
 //
 //  Created by am10 on 2017/12/29.
 //  Copyright © 2017年 am10. All rights reserved.
@@ -8,20 +8,20 @@
 
 import UIKit
 
-protocol AMMeterViewDataSource: class {
+public protocol AMMeterViewDataSource: class {
     
     func numberOfValue(meterView: AMMeterView) -> Int
     func meterView(meterView: AMMeterView, valueForIndex index: Int) -> String
 }
 
-protocol AMMeterViewDelegate: class {
+public protocol AMMeterViewDelegate: class {
     
     func meterView(meterView: AMMeterView, didSelectAtIndex index: Int)
 }
 
-@IBDesignable class AMMeterView: UIView {
+@IBDesignable public class AMMeterView: UIView {
 
-    override var bounds: CGRect {
+    override public var bounds: CGRect {
         
         didSet {
             
@@ -29,37 +29,28 @@ protocol AMMeterViewDelegate: class {
         }
     }
     
-    weak var dataSource:AMMeterViewDataSource?
-    weak var delegate:AMMeterViewDelegate?
+    weak public var dataSource:AMMeterViewDataSource?
+    weak public var delegate:AMMeterViewDelegate?
+    
+    @IBInspectable public var meterBorderLineWidth:CGFloat = 5
+    
+    @IBInspectable public var valueIndexWidth:CGFloat = 2.0
+    
+    @IBInspectable public var valueHandWidth:CGFloat = 3.0
+    
+    @IBInspectable public var meterBorderLineColor:UIColor = UIColor.black
+    
+    @IBInspectable public var meterColor:UIColor = UIColor.clear
+    
+    @IBInspectable public var valueHandColor:UIColor = UIColor.red
+    
+    @IBInspectable public var valueLabelTextColor:UIColor = UIColor.black
+    
+    @IBInspectable public var valueIndexColor:UIColor = UIColor.black
     
     private var numberOfValue:Int = 0
     
-    /// メーターの上下左右の余白
     private let meterSpace:CGFloat = 10
-    
-    /// メーターの枠線の幅
-    @IBInspectable var meterBorderLineWidth:CGFloat = 5
-    
-    /// 値目盛りの太さ
-    @IBInspectable var valueIndexWidth:CGFloat = 2.0
-    
-    /// 針の太さ
-    @IBInspectable var valueHandWidth:CGFloat = 3.0
-    
-    /// メーターの枠線の色
-    @IBInspectable var meterBorderLineColor:UIColor = UIColor.black
-    
-    /// メーターの色
-    @IBInspectable var meterColor:UIColor = UIColor.clear
-    
-    /// 針の色
-    @IBInspectable var valueHandColor:UIColor = UIColor.red
-    
-    /// 値の文字色
-    @IBInspectable var valueLabelTextColor:UIColor = UIColor.black
-    
-    /// 値目盛りの色
-    @IBInspectable var valueIndexColor:UIColor = UIColor.black
     
     private let meterView = UIView()
     
@@ -73,7 +64,7 @@ protocol AMMeterViewDelegate: class {
     
     private var nowAngle:Float = 0.0
     
-    override func draw(_ rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         
         reloadMeter()
     }
@@ -375,7 +366,7 @@ protocol AMMeterViewDelegate: class {
         panLayer = nil
     }
     
-    func reloadMeter() {
+    public func reloadMeter() {
         
         clear()
         
@@ -393,11 +384,10 @@ protocol AMMeterViewDelegate: class {
         prepareValueHandLayer()
     }
     
-    func select(index: Int) {
+    public func select(index: Int) {
         
         let angle = calculateAngle(index: index)
         nowAngle = angle
         drawValueHandLayer(angle: angle)
     }
-    
 }

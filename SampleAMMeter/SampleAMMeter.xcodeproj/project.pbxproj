@@ -7,23 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E9A087420035F2B00DD65DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9A087320035F2B00DD65DB /* AppDelegate.swift */; };
-		0E9A087620035F2B00DD65DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9A087520035F2B00DD65DB /* ViewController.swift */; };
+		0E475331201F0AEF002EA382 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E47532F201F0AEF002EA382 /* AppDelegate.swift */; };
+		0E475332201F0AEF002EA382 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E475330201F0AEF002EA382 /* ViewController.swift */; };
+		0E475335201F0B00002EA382 /* AMMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E475334201F0B00002EA382 /* AMMeterView.swift */; };
 		0E9A087920035F2B00DD65DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E9A087720035F2B00DD65DB /* Main.storyboard */; };
 		0E9A087B20035F2B00DD65DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E9A087A20035F2B00DD65DB /* Assets.xcassets */; };
 		0E9A087E20035F2B00DD65DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E9A087C20035F2B00DD65DB /* LaunchScreen.storyboard */; };
-		0E9A088720035FA500DD65DB /* AMMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9A088620035FA500DD65DB /* AMMeterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E47532F201F0AEF002EA382 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0E475330201F0AEF002EA382 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0E475334201F0B00002EA382 /* AMMeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMMeterView.swift; sourceTree = "<group>"; };
 		0E9A087020035F2B00DD65DB /* SampleAMMeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleAMMeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0E9A087320035F2B00DD65DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0E9A087520035F2B00DD65DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0E9A087820035F2B00DD65DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0E9A087A20035F2B00DD65DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E9A087D20035F2B00DD65DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E9A087F20035F2B00DD65DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E9A088620035FA500DD65DB /* AMMeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMMeterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +37,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E47532E201F0AEF002EA382 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				0E475333201F0B00002EA382 /* AMMeter */,
+				0E47532F201F0AEF002EA382 /* AppDelegate.swift */,
+				0E475330201F0AEF002EA382 /* ViewController.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		0E475333201F0B00002EA382 /* AMMeter */ = {
+			isa = PBXGroup;
+			children = (
+				0E475334201F0B00002EA382 /* AMMeterView.swift */,
+			);
+			name = AMMeter;
+			path = ../../../AMMeter;
+			sourceTree = "<group>";
+		};
 		0E9A086720035F2B00DD65DB = {
 			isa = PBXGroup;
 			children = (
@@ -56,23 +75,13 @@
 		0E9A087220035F2B00DD65DB /* SampleAMMeter */ = {
 			isa = PBXGroup;
 			children = (
-				0E9A088520035FA500DD65DB /* AMMeterView */,
-				0E9A087320035F2B00DD65DB /* AppDelegate.swift */,
-				0E9A087520035F2B00DD65DB /* ViewController.swift */,
+				0E47532E201F0AEF002EA382 /* Classes */,
 				0E9A087720035F2B00DD65DB /* Main.storyboard */,
 				0E9A087A20035F2B00DD65DB /* Assets.xcassets */,
 				0E9A087C20035F2B00DD65DB /* LaunchScreen.storyboard */,
 				0E9A087F20035F2B00DD65DB /* Info.plist */,
 			);
 			path = SampleAMMeter;
-			sourceTree = "<group>";
-		};
-		0E9A088520035FA500DD65DB /* AMMeterView */ = {
-			isa = PBXGroup;
-			children = (
-				0E9A088620035FA500DD65DB /* AMMeterView.swift */,
-			);
-			path = AMMeterView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,7 +116,7 @@
 				TargetAttributes = {
 					0E9A086F20035F2B00DD65DB = {
 						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -147,9 +156,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E9A088720035FA500DD65DB /* AMMeterView.swift in Sources */,
-				0E9A087620035F2B00DD65DB /* ViewController.swift in Sources */,
-				0E9A087420035F2B00DD65DB /* AppDelegate.swift in Sources */,
+				0E475335201F0B00002EA382 /* AMMeterView.swift in Sources */,
+				0E475332201F0AEF002EA382 /* ViewController.swift in Sources */,
+				0E475331201F0AEF002EA382 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,7 +295,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SampleAMMeter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -302,7 +312,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SampleAMMeter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
