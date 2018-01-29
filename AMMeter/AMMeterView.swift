@@ -69,6 +69,22 @@ public protocol AMMeterViewDelegate: class {
         reloadMeter()
     }
     
+    required public init?(coder aDecoder: NSCoder) {
+        
+        super.init(coder:aDecoder)
+    }
+    
+    override public init(frame: CGRect) {
+        
+        super.init(frame: frame)
+        backgroundColor = UIColor.clear
+    }
+    
+    convenience init() {
+        
+        self.init(frame: CGRect.zero)
+    }
+    
     //MARK:Prepare
     private func prepareMeterView() {
         
