@@ -24,6 +24,13 @@ view.addSubview(meterView)
 
 ## Installation
 
+### CocoaPods
+
+Add this to your Podfile.
+```ogdl
+pod 'AMMeterView'
+```
+
 ### Carthage
 
 Add this to your Cartfile.
