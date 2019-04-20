@@ -9,22 +9,18 @@
 import UIKit
 
 public protocol AMMeterViewDataSource: class {
-    
     func numberOfValue(meterView: AMMeterView) -> Int
     func meterView(meterView: AMMeterView, valueForIndex index: Int) -> String
 }
 
 public protocol AMMeterViewDelegate: class {
-    
     func meterView(meterView: AMMeterView, didSelectAtIndex index: Int)
 }
 
 @IBDesignable public class AMMeterView: UIView {
 
     override public var bounds: CGRect {
-        
         didSet {
-            
             reloadMeter()
         }
     }
@@ -65,29 +61,24 @@ public protocol AMMeterViewDelegate: class {
     private var nowAngle:Float = 0.0
     
     override public func draw(_ rect: CGRect) {
-        
         reloadMeter()
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        
         super.init(coder:aDecoder)
     }
     
     override public init(frame: CGRect) {
-        
         super.init(frame: frame)
         backgroundColor = UIColor.clear
     }
     
     convenience init() {
-        
         self.init(frame: CGRect.zero)
     }
     
     //MARK:Prepare
     private func prepareMeterView() {
-        
         var length:CGFloat = (frame.width < frame.height) ? frame.width : frame.height
         length -= meterSpace * 2
         meterView.frame = CGRect(x: frame.width/2 - length/2,
@@ -99,10 +90,8 @@ public protocol AMMeterViewDelegate: class {
     }
 
     private func prepareDrawLayer() {
-        
         drawLayer = CAShapeLayer()
         guard let drawLayer = drawLayer else {
-            
             return
         }
         
@@ -115,9 +104,7 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func prepareValueIndexLayer() {
-        
         guard let drawLayer = drawLayer else {
-            
             return
         }
         
@@ -137,7 +124,6 @@ public protocol AMMeterViewDelegate: class {
         
         // 中心から外への線描画
         for _ in 0..<numberOfValue {
-            
             let point = CGPoint(x: centerPoint.x + radius * CGFloat(cosf(angle)),
                                 y: centerPoint.y + radius * CGFloat(sinf(angle)))
             path.move(to: point)
@@ -153,9 +139,7 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func prepareValueLabel() {
-        
         guard let dataSource = dataSource else {
-            
             return
         }
         
@@ -170,7 +154,6 @@ public protocol AMMeterViewDelegate: class {
         
         // 中心から外への線描画
         for index in 0..<numberOfValue {
-            
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
             label.adjustsFontSizeToFitWidth = true
             label.textAlignment = .center
@@ -186,15 +169,9 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func prepareValueHandLayer() {
-        
-        guard let drawLayer = drawLayer else {
-            
-            return
-        }
-        
         valueHandLayer = CAShapeLayer()
-        guard let valueHandLayer = valueHandLayer else {
-            
+        guard let drawLayer = drawLayer,
+            let valueHandLayer = valueHandLayer else {
             return
         }
         
@@ -220,9 +197,7 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func preparePanGesture() {
-        
         guard let drawLayer = drawLayer else {
-            
             return
         }
         
@@ -238,7 +213,6 @@ public protocol AMMeterViewDelegate: class {
         
         panLayer = CAShapeLayer()
         guard let panLayer = panLayer else {
-            
             return
         }
         
@@ -251,9 +225,7 @@ public protocol AMMeterViewDelegate: class {
     
     //MARK: Gesture Action
     @objc func panAction(gesture: UIPanGestureRecognizer) {
-        
         guard let panLayer = panLayer else {
-            
             return
         }
         
@@ -261,36 +233,27 @@ public protocol AMMeterViewDelegate: class {
         
         /// ジェスチャ開始
         if gesture.state == .began {
-            
             isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
-            
         } else {
-            
             if !isEditing {
-                
                 isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
-                
             } else {
-                
                 editValue(point: point)
             }
         }
     }
     
     private func editValue(point: CGPoint) {
-        
         let radian = calculateRadian(point: point)
         let angle = calculateValueAngle(radian: radian)
         
         if angle == nowAngle {
-            
             return
         }
         
         nowAngle = angle
         drawValueHandLayer(angle: angle)
         guard let delegate = delegate else {
-            
             return
         }
         
@@ -300,9 +263,7 @@ public protocol AMMeterViewDelegate: class {
     
     //MARK:Draw ValueHand
     private func drawValueHandLayer(angle: Float) {
-        
         guard let valueHandLayer = valueHandLayer else {
-            
             return
         }
         
@@ -324,14 +285,12 @@ public protocol AMMeterViewDelegate: class {
     
     //MARK:Calculate
     private func calculateValueAngle(radian: Float) -> Float {
-        
         let index:Int = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
         let angle:Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
     
     private func calculateRadian(point: CGPoint) -> Float {
-        
         // 原点　viewの中心
         let radius = meterView.frame.width/2
         let centerPoint = CGPoint(x: radius, y: radius)
@@ -345,12 +304,10 @@ public protocol AMMeterViewDelegate: class {
         // radianに補正をする(3/2π~7/2π:0時が3/2π)
         radian = radian * -1
         if radian < 0 {
-            
             radian += Float(2*Double.pi)
         }
         
         if radian >= 0 && radian < Float(Double.pi/2 + Double.pi) {
-            
             radian += Float(2*Double.pi)
         }
         
@@ -358,13 +315,11 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func calculateAngle(index: Int) -> Float {
-        
         let angle:Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
     
     private func adjustFont(rect: CGRect) -> UIFont {
-        
         let length:CGFloat = (rect.width > rect.height) ? rect.height : rect.width
         let font = UIFont.systemFont(ofSize: length * 0.8)
         return font
@@ -372,7 +327,6 @@ public protocol AMMeterViewDelegate: class {
     
     //MARK:Clear/Reload
     private func clear() {
-        
         meterView.subviews.forEach{$0.removeFromSuperview()}
         meterView.removeFromSuperview()
         drawLayer?.removeFromSuperlayer()
@@ -383,11 +337,9 @@ public protocol AMMeterViewDelegate: class {
     }
     
     public func reloadMeter() {
-        
         clear()
         
         if let dataSource = dataSource {
-            
             numberOfValue = dataSource.numberOfValue(meterView: self)
         }
         
@@ -401,7 +353,6 @@ public protocol AMMeterViewDelegate: class {
     }
     
     public func select(index: Int) {
-        
         let angle = calculateAngle(index: index)
         nowAngle = angle
         drawValueHandLayer(angle: angle)
