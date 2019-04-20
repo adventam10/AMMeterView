@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, AMMeterViewDelegate, AMMeterViewDataSource {
+class ViewController: UIViewController {
 
     @IBOutlet weak var mView1: AMMeterView!
     @IBOutlet weak var mView2: AMMeterView!
@@ -40,42 +40,31 @@ class ViewController: UIViewController, AMMeterViewDelegate, AMMeterViewDataSour
     }
 
     private func getMeterList(meterView: AMMeterView) -> [String] {
-        
         if meterView == mView2 {
-            
             return meterList2
-            
         } else if meterView == mView3 {
-            
             return meterList3
         }
-        
         return meterList1
     }
+}
 
-    func numberOfValue(meterView: AMMeterView) -> Int {
-        
+extension ViewController: AMMeterViewDelegate, AMMeterViewDataSource {
+    func numberOfValue(in meterView: AMMeterView) -> Int {
         return getMeterList(meterView: meterView).count
     }
     
-    func meterView(meterView: AMMeterView, valueForIndex index: Int) -> String {
-        
+    func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String {
         return getMeterList(meterView: meterView)[index]
     }
     
-    func meterView(meterView: AMMeterView, didSelectAtIndex index: Int) {
-        
+    func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) {
         let list = getMeterList(meterView: meterView)
         if meterView == mView1 {
-            
             label1.text = list[index]
-            
         } else if meterView == mView2 {
-            
             label2.text = list[index]
-            
         } else if meterView == mView3 {
-            
             label3.text = list[index]
         }
     }

@@ -9,12 +9,12 @@
 import UIKit
 
 public protocol AMMeterViewDataSource: class {
-    func numberOfValue(meterView: AMMeterView) -> Int
-    func meterView(meterView: AMMeterView, valueForIndex index: Int) -> String
+    func numberOfValue(in meterView: AMMeterView) -> Int
+    func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String
 }
 
 public protocol AMMeterViewDelegate: class {
-    func meterView(meterView: AMMeterView, didSelectAtIndex index: Int)
+    func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int)
 }
 
 @IBDesignable public class AMMeterView: UIView {
@@ -24,7 +24,7 @@ public protocol AMMeterViewDelegate: class {
             reloadMeter()
         }
     }
-    
+
     weak public var dataSource:AMMeterViewDataSource?
     weak public var delegate:AMMeterViewDelegate?
     
@@ -158,7 +158,7 @@ public protocol AMMeterViewDelegate: class {
             label.adjustsFontSizeToFitWidth = true
             label.textAlignment = .center
             label.textColor = valueLabelTextColor
-            label.text = dataSource.meterView(meterView: self, valueForIndex: index)
+            label.text = dataSource.meterView(self, valueForIndex: index)
             label.font = adjustFont(rect: label.frame)
             meterView.addSubview(label)
             let point = CGPoint(x: centerPoint.x + smallRadius * CGFloat(cosf(angle)),
@@ -251,12 +251,9 @@ public protocol AMMeterViewDelegate: class {
         
         nowAngle = angle
         drawValueHandLayer(angle: angle)
-        guard let delegate = delegate else {
-            return
-        }
         
         let index = (radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue))
-        delegate.meterView(meterView: self, didSelectAtIndex: Int(index))
+        delegate?.meterView(self, didSelectAtIndex: Int(index))
     }
     
     //MARK:Draw ValueHand
@@ -337,7 +334,7 @@ public protocol AMMeterViewDelegate: class {
         clear()
         
         if let dataSource = dataSource {
-            numberOfValue = dataSource.numberOfValue(meterView: self)
+            numberOfValue = dataSource.numberOfValue(in: self)
         }
         
         prepareMeterView()
