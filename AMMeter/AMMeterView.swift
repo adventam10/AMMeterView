@@ -122,7 +122,7 @@ public protocol AMMeterViewDelegate: class {
         let path = UIBezierPath()
         let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
         
-        // 中心から外への線描画
+        // draw line (from center to out)
         for _ in 0..<numberOfValue {
             let point = CGPoint(x: centerPoint.x + radius * CGFloat(cosf(angle)),
                                 y: centerPoint.y + radius * CGFloat(sinf(angle)))
@@ -152,7 +152,7 @@ public protocol AMMeterViewDelegate: class {
         
         let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
         
-        // 中心から外への線描画
+        // draw line (from center to out)
         for index in 0..<numberOfValue {
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
             label.adjustsFontSizeToFitWidth = true
@@ -230,8 +230,6 @@ public protocol AMMeterViewDelegate: class {
         }
         
         let point = gesture.location(in: meterView)
-        
-        /// ジェスチャ開始
         if gesture.state == .began {
             isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
         } else {
@@ -291,17 +289,16 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func calculateRadian(point: CGPoint) -> Float {
-        // 原点　viewの中心
+        // origin(view's center)
         let radius = meterView.frame.width/2
         let centerPoint = CGPoint(x: radius, y: radius)
         
-        // 座標の差を求める 画面の上側をY座標＋とするので、Y座標は符号を入れ替える
+        // Find difference in coordinates.Since the upper side of the screen is the Y coordinate +, the Y coordinate changes the sign.
         let x:Float = Float(point.x - centerPoint.x)
         let y:Float = -Float(point.y - centerPoint.y)
-        // 角度radianを求める
         var radian:Float = atan2f(y, x)
         
-        // radianに補正をする(3/2π~7/2π:0時が3/2π)
+        // To correct radian(3/2π~7/2π: 0 o'clock = 3/2π)
         radian = radian * -1
         if radian < 0 {
             radian += Float(2*Double.pi)
