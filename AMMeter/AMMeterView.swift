@@ -8,12 +8,12 @@
 
 import UIKit
 
-public protocol AMMeterViewDataSource: class {
+public protocol AMMeterViewDataSource: AnyObject {
     func numberOfValue(in meterView: AMMeterView) -> Int
     func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String
 }
 
-public protocol AMMeterViewDelegate: class {
+public protocol AMMeterViewDelegate: AnyObject {
     func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int)
 }
 
@@ -25,40 +25,27 @@ public protocol AMMeterViewDelegate: class {
         }
     }
 
-    weak public var dataSource:AMMeterViewDataSource?
-    weak public var delegate:AMMeterViewDelegate?
+    weak public var dataSource: AMMeterViewDataSource?
+    weak public var delegate: AMMeterViewDelegate?
     
-    @IBInspectable public var meterBorderLineWidth:CGFloat = 5
+    @IBInspectable public var meterBorderLineWidth: CGFloat = 5
+    @IBInspectable public var valueIndexWidth: CGFloat = 2.0
+    @IBInspectable public var valueHandWidth: CGFloat = 3.0
+    @IBInspectable public var meterBorderLineColor: UIColor = .black
+    @IBInspectable public var meterColor: UIColor = .clear
+    @IBInspectable public var valueHandColor: UIColor = .red
+    @IBInspectable public var valueLabelTextColor: UIColor = .black
+    @IBInspectable public var valueIndexColor: UIColor = .black
     
-    @IBInspectable public var valueIndexWidth:CGFloat = 2.0
-    
-    @IBInspectable public var valueHandWidth:CGFloat = 3.0
-    
-    @IBInspectable public var meterBorderLineColor:UIColor = UIColor.black
-    
-    @IBInspectable public var meterColor:UIColor = UIColor.clear
-    
-    @IBInspectable public var valueHandColor:UIColor = UIColor.red
-    
-    @IBInspectable public var valueLabelTextColor:UIColor = UIColor.black
-    
-    @IBInspectable public var valueIndexColor:UIColor = UIColor.black
-    
-    private var numberOfValue:Int = 0
-    
-    private let meterSpace:CGFloat = 10
-    
+    private let meterSpace: CGFloat = 10
     private let meterView = UIView()
     
-    private var drawLayer:CAShapeLayer?
-    
-    private var valueHandLayer:CAShapeLayer?
-    
-    private var panLayer:CAShapeLayer?
-    
+    private var numberOfValue: Int = 0
+    private var drawLayer: CAShapeLayer?
+    private var valueHandLayer: CAShapeLayer?
+    private var panLayer: CAShapeLayer?
     private var isEditing = false
-    
-    private var nowAngle:Float = 0.0
+    private var nowAngle: Float = 0.0
     
     override public func draw(_ rect: CGRect) {
         reloadMeter()
@@ -70,22 +57,22 @@ public protocol AMMeterViewDelegate: class {
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.clear
+        backgroundColor = .clear
     }
     
     convenience init() {
-        self.init(frame: CGRect.zero)
+        self.init(frame: .zero)
     }
     
-    //MARK:Prepare
+    //MARK:- Prepare
     private func prepareMeterView() {
-        var length:CGFloat = (frame.width < frame.height) ? frame.width : frame.height
+        var length: CGFloat = (frame.width < frame.height) ? frame.width : frame.height
         length -= meterSpace * 2
         meterView.frame = CGRect(x: frame.width/2 - length/2,
                                  y: frame.height/2 - length/2,
                                  width: length,
                                  height: length)
-        meterView.backgroundColor = UIColor.clear
+        meterView.backgroundColor = .clear
         addSubview(meterView)
     }
 
@@ -114,7 +101,7 @@ public protocol AMMeterViewDelegate: class {
         layer.strokeColor = valueIndexColor.cgColor
         layer.fillColor = UIColor.clear.cgColor
         
-        var angle:Float = Float(Double.pi/2 + Double.pi)
+        var angle: Float = Float(Double.pi/2 + Double.pi)
         let radius = meterView.frame.width/2
         let centerPoint = CGPoint(x: radius, y: radius)
         let smallRadius = radius - (radius/10 + meterBorderLineWidth)
@@ -143,7 +130,7 @@ public protocol AMMeterViewDelegate: class {
             return
         }
         
-        var angle:Float = Float(Double.pi/2 + Double.pi)
+        var angle: Float = Float(Double.pi/2 + Double.pi)
         let radius = meterView.frame.width/2
         let centerPoint = CGPoint(x: radius, y: radius)
         var smallRadius = radius - (radius/10 + meterBorderLineWidth)
@@ -180,7 +167,7 @@ public protocol AMMeterViewDelegate: class {
         valueHandLayer.strokeColor = valueHandColor.cgColor
         valueHandLayer.fillColor = UIColor.clear.cgColor
         
-        let angle:Float = Float(Double.pi/2 + Double.pi)
+        let angle: Float = Float(Double.pi/2 + Double.pi)
         
         let radius = meterView.frame.width/2
         let length = radius * 0.8
@@ -223,7 +210,7 @@ public protocol AMMeterViewDelegate: class {
         panLayer.path = path.cgPath
     }
     
-    //MARK: Gesture Action
+    //MARK:- Gesture Action
     @objc func panAction(gesture: UIPanGestureRecognizer) {
         guard let panLayer = panLayer else {
             return
@@ -256,7 +243,7 @@ public protocol AMMeterViewDelegate: class {
         delegate?.meterView(self, didSelectAtIndex: Int(index))
     }
     
-    //MARK:Draw ValueHand
+    //MARK:- Draw ValueHand
     private func drawValueHandLayer(angle: Float) {
         guard let valueHandLayer = valueHandLayer else {
             return
@@ -278,10 +265,10 @@ public protocol AMMeterViewDelegate: class {
         CATransaction.commit()
     }
     
-    //MARK:Calculate
+    //MARK:- Calculate
     private func calculateValueAngle(radian: Float) -> Float {
-        let index:Int = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
-        let angle:Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
+        let index: Int = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
+        let angle: Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
     
@@ -291,9 +278,9 @@ public protocol AMMeterViewDelegate: class {
         let centerPoint = CGPoint(x: radius, y: radius)
         
         // Find difference in coordinates.Since the upper side of the screen is the Y coordinate +, the Y coordinate changes the sign.
-        let x:Float = Float(point.x - centerPoint.x)
-        let y:Float = -Float(point.y - centerPoint.y)
-        var radian:Float = atan2f(y, x)
+        let x: Float = Float(point.x - centerPoint.x)
+        let y: Float = -Float(point.y - centerPoint.y)
+        var radian: Float = atan2f(y, x)
         
         // To correct radian(3/2π~7/2π: 0 o'clock = 3/2π)
         radian = radian * -1
@@ -309,17 +296,17 @@ public protocol AMMeterViewDelegate: class {
     }
     
     private func calculateAngle(index: Int) -> Float {
-        let angle:Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
+        let angle: Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
     
     private func adjustFont(rect: CGRect) -> UIFont {
-        let length:CGFloat = (rect.width > rect.height) ? rect.height : rect.width
+        let length: CGFloat = (rect.width > rect.height) ? rect.height : rect.width
         let font = UIFont.systemFont(ofSize: length * 0.8)
         return font
     }
     
-    //MARK:Clear/Reload
+    //MARK:- Clear/Reload
     private func clear() {
         meterView.subviews.forEach{$0.removeFromSuperview()}
         meterView.removeFromSuperview()
