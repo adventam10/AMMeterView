@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     let meterList1 = ["0", "5", "10", "15", "20", "30"]
     let meterList2 = ["A", "B", "C", "D", "E", "F", "G", "H"]
     let meterList3 = ["りんご", "バナナ", "メロン"]
-    
+    let colors: [UIColor] = [.black, .red, .blue, .magenta, .purple, .orange, .brown, .white]
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -32,6 +32,10 @@ class ViewController: UIViewController {
         mView1.dataSource = self
         mView2.dataSource = self
         mView3.dataSource = self
+        
+        label1.text = "selected value: " + meterList1[mView1.selectedIndex]
+        label2.text = "selected value: " + meterList2[mView2.selectedIndex]
+        label3.text = "selected value: " + meterList3[mView3.selectedIndex]
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,19 +58,24 @@ extension ViewController: AMMeterViewDelegate, AMMeterViewDataSource {
         return getMeterList(meterView: meterView).count
     }
     
-    func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String {
+    func meterView(_ meterView: AMMeterView, titleForValueAtIndex index: Int) -> String {
         return getMeterList(meterView: meterView)[index]
     }
     
     func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) {
         let list = getMeterList(meterView: meterView)
         if meterView == mView1 {
-            label1.text = list[index]
+            label1.text = "selected value: " + list[index]
         } else if meterView == mView2 {
-            label2.text = list[index]
+            label2.text = "selected value: " + list[index]
         } else if meterView == mView3 {
-            label3.text = list[index]
+            label3.text = "selected value: " + list[index]
+            mView1.selectValue(at: 3)
         }
+    }
+    
+    func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor {
+        return meterView == mView2 ? colors[index] : .black
     }
 }
 

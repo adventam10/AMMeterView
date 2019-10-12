@@ -9,8 +9,17 @@
 import UIKit
 
 public protocol AMMeterViewDataSource: AnyObject {
+    // MARK:- Required
     func numberOfValue(in meterView: AMMeterView) -> Int
-    func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String
+    func meterView(_ meterView: AMMeterView, titleForValueAtIndex index: Int) -> String
+    // MARK:- Optional
+    func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor
+}
+
+public extension AMMeterViewDataSource {
+    func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor {
+        return .black
+    }
 }
 
 public protocol AMMeterViewDelegate: AnyObject {
@@ -72,27 +81,34 @@ internal class AMMeterModel {
 
 @IBDesignable public class AMMeterView: UIView {
 
-    override public var bounds: CGRect {
-        didSet {
-            reloadMeter()
-        }
-    }
-
-    weak public var dataSource: AMMeterViewDataSource?
-    weak public var delegate: AMMeterViewDelegate?
-    
     @IBInspectable public var meterBorderLineWidth: CGFloat = 5
     @IBInspectable public var valueIndexWidth: CGFloat = 2.0
     @IBInspectable public var valueHandWidth: CGFloat = 3.0
     @IBInspectable public var meterBorderLineColor: UIColor = .black
     @IBInspectable public var meterColor: UIColor = .clear
     @IBInspectable public var valueHandColor: UIColor = .red
-    @IBInspectable public var valueLabelTextColor: UIColor = .black
     @IBInspectable public var valueIndexColor: UIColor = .black
+    
+    weak public var dataSource: AMMeterViewDataSource? {
+        didSet {
+            model.numberOfValue = dataSource?.numberOfValue(in: self) ?? 0
+        }
+    }
+    weak public var delegate: AMMeterViewDelegate?
+    public var selectedIndex: Int {
+        return model.currentIndex
+    }
+    
+    override public var bounds: CGRect {
+        didSet {
+            reloadMeter()
+        }
+    }
     
     private let meterView = UIView()
     private let model = AMMeterModel()
     
+    private var valueLabels = [UILabel]()
     private var drawLayer: CAShapeLayer?
     private var valueHandLayer: CAShapeLayer?
     private var panLayer: CAShapeLayer?
@@ -146,7 +162,8 @@ internal class AMMeterModel {
         // draw line (from center to out)
         for index in 0..<model.numberOfValue {
             let label = makeLabel(length: length)
-            label.text = dataSource.meterView(self, valueForIndex: index)
+            label.text = dataSource.meterView(self, titleForValueAtIndex: index)
+            label.textColor = dataSource.meterView(self, textColorForValueAtIndex: index)
             label.font = model.adjustFont(rect: label.frame)
             meterView.addSubview(label)
             let point = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
@@ -160,7 +177,7 @@ internal class AMMeterModel {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
-        label.textColor = valueLabelTextColor
+        label.baselineAdjustment = .alignCenters
         return label
     }
     
@@ -232,7 +249,7 @@ internal class AMMeterModel {
         return panLayer
     }
     
-    //MARK:- Gesture Action
+    // MARK:- Gesture Action
     @objc func panAction(gesture: UIPanGestureRecognizer) {
         guard let panLayer = panLayer else {
             return
@@ -287,11 +304,10 @@ internal class AMMeterModel {
     public func reloadMeter() {
         clear()
         
-        if let dataSource = dataSource {
-            model.numberOfValue = dataSource.numberOfValue(in: self)
-        }
+        model.numberOfValue = dataSource?.numberOfValue(in: self) ?? 0
         
         prepareMeterView()
+        
         drawLayer = makeDrawLayer()
         meterView.layer.addSublayer(drawLayer!)
         drawLayer!.addSublayer(makeValueIndexLayer())
