@@ -90,7 +90,6 @@ internal class AMMeterModel {
     @IBInspectable public var valueLabelTextColor: UIColor = .black
     @IBInspectable public var valueIndexColor: UIColor = .black
     
-    private let meterSpace: CGFloat = 10
     private let meterView = UIView()
     private let model = AMMeterModel()
     
@@ -126,8 +125,7 @@ internal class AMMeterModel {
     
     // MARK:- Prepare View
     private func prepareMeterView() {
-        var length = (frame.width < frame.height) ? frame.width : frame.height
-        length -= meterSpace * 2
+        let length = (frame.width < frame.height) ? frame.width : frame.height
         meterView.frame = CGRect(x: frame.width/2 - length/2,
                                  y: frame.height/2 - length/2,
                                  width: length, height: length)
@@ -277,7 +275,7 @@ internal class AMMeterModel {
     
     // MARK:- Clear/Reload
     private func clear() {
-        meterView.subviews.forEach{$0.removeFromSuperview()}
+        meterView.subviews.forEach { $0.removeFromSuperview() }
         meterView.removeFromSuperview()
         drawLayer?.removeFromSuperlayer()
         drawLayer = nil
