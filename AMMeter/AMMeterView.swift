@@ -31,7 +31,9 @@ internal class AMMeterModel {
     var isEditing = false
     var currentAngle = Float(Double.pi + Double.pi/2) // 3/2π~7/2π
     var currentIndex: Int {
-        return Int((currentAngle - angle270 + 0.00001) / angleUnit)
+        let index = Int((currentAngle - angle270 + 0.00001) / angleUnit)
+        precondition(numberOfValue > index && index >= 0)
+        return index
     }
     var angleUnit: Float {
         precondition(numberOfValue > 0)
@@ -325,7 +327,7 @@ internal class AMMeterModel {
     }
     
     public func selectValue(at index: Int) {
-        precondition(model.numberOfValue > index)
+        precondition(model.numberOfValue > index && index >= 0)
         model.currentAngle = model.calculateAngle(index: index)
         drawValueHandLayer(angle: model.currentAngle)
     }
