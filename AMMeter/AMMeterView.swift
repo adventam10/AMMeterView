@@ -17,6 +17,59 @@ public protocol AMMeterViewDelegate: AnyObject {
     func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int)
 }
 
+internal class AMMeterModel {
+    var numberOfValue: Int = 0
+    var isEditing = false
+    var currentAngle = Float(Double.pi + Double.pi/2) // 3/2π~7/2π
+    var currentIndex: Int {
+        return Int((currentAngle - angle270 + 0.00001) / angleUnit)
+    }
+    var angleUnit: Float {
+        precondition(numberOfValue > 0)
+        return angle360 / Float(numberOfValue)
+    }
+    
+    let angle270 = Float(Double.pi + Double.pi/2)
+    let angle360 = Float(Double.pi*2)
+    
+    func adjustFont(rect: CGRect) -> UIFont {
+        let length = (rect.width > rect.height) ? rect.height : rect.width
+        return .systemFont(ofSize: length * 0.8)
+    }
+    
+    func calculateValueAngle(point: CGPoint, radius: CGFloat) -> Float {
+        let angle = calculateRadian(point: point, radius: radius)
+        let index = Int((angle - angle270) / angleUnit)
+        return calculateAngle(index: index)
+    }
+    
+    func calculateAngle(index: Int) -> Float {
+        return angleUnit * Float(index) + angle270
+    }
+    
+    private func calculateRadian(point: CGPoint, radius: CGFloat) -> Float {
+        // origin(view's center)
+        let centerPoint = CGPoint(x: radius, y: radius)
+        
+        // Find difference in coordinates.Since the upper side of the screen is the Y coordinate +, the Y coordinate changes the sign.
+        let x = Float(point.x - centerPoint.x)
+        let y = -Float(point.y - centerPoint.y)
+        var radian = atan2f(y, x)
+        
+        // To correct radian(3/2π~7/2π: 0 o'clock = 3/2π)
+        radian = radian * -1
+        if radian < 0 {
+            radian += angle360
+        }
+        
+        if radian >= 0 && radian < angle270 {
+            radian += angle360
+        }
+        
+        return radian
+    }
+}
+
 @IBDesignable public class AMMeterView: UIView {
 
     override public var bounds: CGRect {
@@ -39,13 +92,11 @@ public protocol AMMeterViewDelegate: AnyObject {
     
     private let meterSpace: CGFloat = 10
     private let meterView = UIView()
+    private let model = AMMeterModel()
     
-    private var numberOfValue: Int = 0
     private var drawLayer: CAShapeLayer?
     private var valueHandLayer: CAShapeLayer?
     private var panLayer: CAShapeLayer?
-    private var isEditing = false
-    private var nowAngle: Float = 0.0
     private var meterCenter: CGPoint {
         return .init(x: radius, y: radius)
     }
@@ -89,23 +140,21 @@ public protocol AMMeterViewDelegate: AnyObject {
             return
         }
         
-        var angle = Float(Double.pi/2 + Double.pi)
+        var angle = model.angle270
         var smallRadius = radius - (radius/10 + meterBorderLineWidth)
         let length = radius/4
         smallRadius -= length/2
         
-        let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
-        
         // draw line (from center to out)
-        for index in 0..<numberOfValue {
+        for index in 0..<model.numberOfValue {
             let label = makeLabel(length: length)
             label.text = dataSource.meterView(self, valueForIndex: index)
-            label.font = adjustFont(rect: label.frame)
+            label.font = model.adjustFont(rect: label.frame)
             meterView.addSubview(label)
             let point = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
                                 y: meterCenter.y + smallRadius * CGFloat(sinf(angle)))
             label.center = point
-            angle += angleUnit
+            angle += model.angleUnit
         }
     }
     
@@ -133,26 +182,23 @@ public protocol AMMeterViewDelegate: AnyObject {
         layer.frame = drawLayer!.bounds
         layer.strokeColor = valueIndexColor.cgColor
         layer.fillColor = UIColor.clear.cgColor
+        layer.lineWidth = valueIndexWidth
         
-        var angle: Float = Float(Double.pi/2 + Double.pi)
         let smallRadius = radius - (radius/10 + meterBorderLineWidth)
-        
         let path = UIBezierPath()
-        let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
+        var angle = model.angle270
         
         // draw line (from center to out)
-        for _ in 0..<numberOfValue {
+        for _ in 0..<model.numberOfValue {
             let start = CGPoint(x: meterCenter.x + radius * CGFloat(cosf(angle)),
                                 y: meterCenter.y + radius * CGFloat(sinf(angle)))
             path.move(to: start)
             let end = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
                               y: meterCenter.y + smallRadius * CGFloat(sinf(angle)))
             path.addLine(to: end)
-            
-            angle += angleUnit
+            angle += model.angleUnit
         }
         
-        layer.lineWidth = valueIndexWidth
         layer.path = path.cgPath
         return layer
     }
@@ -162,10 +208,8 @@ public protocol AMMeterViewDelegate: AnyObject {
         valueHandLayer.frame = drawLayer!.bounds
         valueHandLayer.strokeColor = valueHandColor.cgColor
         valueHandLayer.fillColor = UIColor.clear.cgColor
-        
-        let angle = Float(Double.pi/2 + Double.pi)
         valueHandLayer.lineWidth = valueHandWidth
-        valueHandLayer.path = makeHandPath(angle: angle).cgPath
+        valueHandLayer.path = makeHandPath(angle: model.angle270).cgPath
         return valueHandLayer
     }
     
@@ -181,9 +225,7 @@ public protocol AMMeterViewDelegate: AnyObject {
     private func makePanLayer() -> CAShapeLayer {
         let path = UIBezierPath(ovalIn: CGRect(x: meterCenter.x - radius,
                                                y: meterCenter.y - radius,
-                                               width: radius * 2,
-                                               height: radius * 2))
-        
+                                               width: radius * 2, height: radius * 2))
         let panLayer = CAShapeLayer()
         panLayer.frame = drawLayer!.bounds
         panLayer.strokeColor = UIColor.clear.cgColor
@@ -200,10 +242,10 @@ public protocol AMMeterViewDelegate: AnyObject {
         
         let point = gesture.location(in: meterView)
         if gesture.state == .began {
-            isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
+            model.isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
         } else {
-            if !isEditing {
-                isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
+            if !model.isEditing {
+                model.isEditing = UIBezierPath(cgPath: panLayer.path!).contains(point)
             } else {
                 editValue(point: point)
             }
@@ -211,18 +253,14 @@ public protocol AMMeterViewDelegate: AnyObject {
     }
     
     private func editValue(point: CGPoint) {
-        let radian = calculateRadian(point: point)
-        let angle = calculateValueAngle(radian: radian)
-        
-        if angle == nowAngle {
+        let angle = model.calculateValueAngle(point: point, radius: radius)
+        if angle == model.currentAngle {
             return
         }
         
-        nowAngle = angle
+        model.currentAngle = angle
         drawValueHandLayer(angle: angle)
-        
-        let index = (radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue))
-        delegate?.meterView(self, didSelectAtIndex: Int(index))
+        delegate?.meterView(self, didSelectAtIndex: model.currentIndex)
     }
     
     // MARK:- Draw ValueHand
@@ -235,46 +273,6 @@ public protocol AMMeterViewDelegate: AnyObject {
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
         valueHandLayer.path = makeHandPath(angle: angle).cgPath
         CATransaction.commit()
-    }
-    
-    // MARK:- Calculate
-    private func calculateValueAngle(radian: Float) -> Float {
-        let index = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
-        let angle: Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
-        return angle + Float(Double.pi/2 + Double.pi)
-    }
-    
-    private func calculateRadian(point: CGPoint) -> Float {
-        // origin(view's center)
-        let radius = meterView.frame.width/2
-        let centerPoint = CGPoint(x: radius, y: radius)
-        
-        // Find difference in coordinates.Since the upper side of the screen is the Y coordinate +, the Y coordinate changes the sign.
-        let x: Float = Float(point.x - centerPoint.x)
-        let y: Float = -Float(point.y - centerPoint.y)
-        var radian: Float = atan2f(y, x)
-        
-        // To correct radian(3/2π~7/2π: 0 o'clock = 3/2π)
-        radian = radian * -1
-        if radian < 0 {
-            radian += Float(2*Double.pi)
-        }
-        
-        if radian >= 0 && radian < Float(Double.pi/2 + Double.pi) {
-            radian += Float(2*Double.pi)
-        }
-        
-        return radian
-    }
-    
-    private func calculateAngle(index: Int) -> Float {
-        let angle = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
-        return angle + Float(Double.pi/2 + Double.pi)
-    }
-    
-    private func adjustFont(rect: CGRect) -> UIFont {
-        let length = (rect.width > rect.height) ? rect.height : rect.width
-        return .systemFont(ofSize: length * 0.8)
     }
     
     // MARK:- Clear/Reload
@@ -292,7 +290,7 @@ public protocol AMMeterViewDelegate: AnyObject {
         clear()
         
         if let dataSource = dataSource {
-            numberOfValue = dataSource.numberOfValue(in: self)
+            model.numberOfValue = dataSource.numberOfValue(in: self)
         }
         
         prepareMeterView()
@@ -313,8 +311,8 @@ public protocol AMMeterViewDelegate: AnyObject {
     }
     
     public func select(index: Int) {
-        let angle = calculateAngle(index: index)
-        nowAngle = angle
-        drawValueHandLayer(angle: angle)
+        precondition(model.numberOfValue > index)
+        model.currentAngle = model.calculateAngle(index: index)
+        drawValueHandLayer(angle: model.currentAngle)
     }
 }
