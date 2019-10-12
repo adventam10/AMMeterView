@@ -29,8 +29,11 @@ Conform to the protocol in the class implementation.
 
 ```swift
 /// DataSource
+// Required
 func numberOfValue(in meterView: AMMeterView) -> Int
-func meterView(_ meterView: AMMeterView, valueForIndex index: Int) -> String
+func meterView(_ meterView: AMMeterView, titleForValueAtIndex index: Int) -> String
+// Optional
+func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor
 
 /// Delegate
 func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) { 
@@ -48,11 +51,10 @@ func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) {
 @IBInspectable public var meterBorderLineColor: UIColor = .black
 @IBInspectable public var meterColor: UIColor = .clear
 @IBInspectable public var valueHandColor: UIColor = .red
-@IBInspectable public var valueLabelTextColor: UIColor = .black
 @IBInspectable public var valueIndexColor: UIColor = .black
 ```
 
-<img width="345" alt="meter" src="https://user-images.githubusercontent.com/34936885/34903871-c4a26bb4-f87d-11e7-9146-9f9b8d522a88.png">
+![meter](https://user-images.githubusercontent.com/34936885/66704526-a81e3380-ed57-11e9-8f63-affdb3b3ed35.png)
 
 ## Installation
 
