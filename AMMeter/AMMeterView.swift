@@ -294,6 +294,8 @@ internal class AMMeterModel {
     
     // MARK:- Clear/Reload
     private func clear() {
+        valueLabels.forEach { $0.removeFromSuperview() }
+        valueLabels.removeAll()
         meterView.subviews.forEach { $0.removeFromSuperview() }
         meterView.removeFromSuperview()
         drawLayer?.removeFromSuperlayer()
