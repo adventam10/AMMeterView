@@ -46,6 +46,15 @@ public protocol AMMeterViewDelegate: AnyObject {
     private var panLayer: CAShapeLayer?
     private var isEditing = false
     private var nowAngle: Float = 0.0
+    private var meterCenter: CGPoint {
+        return .init(x: radius, y: radius)
+    }
+    private var radius: CGFloat {
+        return meterView.frame.width/2
+    }
+    private var handLength: CGFloat {
+        return radius * 0.8
+    }
     
     override public func draw(_ rect: CGRect) {
         reloadMeter()
@@ -64,75 +73,23 @@ public protocol AMMeterViewDelegate: AnyObject {
         self.init(frame: .zero)
     }
     
-    //MARK:- Prepare
+    // MARK:- Prepare View
     private func prepareMeterView() {
-        var length: CGFloat = (frame.width < frame.height) ? frame.width : frame.height
+        var length = (frame.width < frame.height) ? frame.width : frame.height
         length -= meterSpace * 2
         meterView.frame = CGRect(x: frame.width/2 - length/2,
                                  y: frame.height/2 - length/2,
-                                 width: length,
-                                 height: length)
+                                 width: length, height: length)
         meterView.backgroundColor = .clear
         addSubview(meterView)
     }
 
-    private func prepareDrawLayer() {
-        drawLayer = CAShapeLayer()
-        guard let drawLayer = drawLayer else {
-            return
-        }
-        
-        drawLayer.frame = meterView.bounds
-        meterView.layer.addSublayer(drawLayer)
-        drawLayer.cornerRadius = meterView.frame.width/2
-        drawLayer.masksToBounds = true
-        drawLayer.borderWidth = meterBorderLineWidth
-        drawLayer.borderColor = meterBorderLineColor.cgColor
-    }
-    
-    private func prepareValueIndexLayer() {
-        guard let drawLayer = drawLayer else {
-            return
-        }
-        
-        let layer = CAShapeLayer()
-        layer.frame = drawLayer.bounds
-        drawLayer.addSublayer(layer)
-        layer.strokeColor = valueIndexColor.cgColor
-        layer.fillColor = UIColor.clear.cgColor
-        
-        var angle: Float = Float(Double.pi/2 + Double.pi)
-        let radius = meterView.frame.width/2
-        let centerPoint = CGPoint(x: radius, y: radius)
-        let smallRadius = radius - (radius/10 + meterBorderLineWidth)
-        
-        let path = UIBezierPath()
-        let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
-        
-        // draw line (from center to out)
-        for _ in 0..<numberOfValue {
-            let point = CGPoint(x: centerPoint.x + radius * CGFloat(cosf(angle)),
-                                y: centerPoint.y + radius * CGFloat(sinf(angle)))
-            path.move(to: point)
-            let point2 = CGPoint(x: centerPoint.x + smallRadius * CGFloat(cosf(angle)),
-                                 y: centerPoint.y + smallRadius * CGFloat(sinf(angle)))
-            path.addLine(to: point2)
-            
-            angle += angleUnit
-        }
-        
-        layer.lineWidth = valueIndexWidth
-        layer.path = path.cgPath
-    }
-    
     private func prepareValueLabel() {
         guard let dataSource = dataSource else {
             return
         }
         
-        var angle: Float = Float(Double.pi/2 + Double.pi)
-        let radius = meterView.frame.width/2
-        let centerPoint = CGPoint(x: radius, y: radius)
+        var angle = Float(Double.pi/2 + Double.pi)
         var smallRadius = radius - (radius/10 + meterBorderLineWidth)
         let length = radius/4
         smallRadius -= length/2
@@ -141,73 +98,98 @@ public protocol AMMeterViewDelegate: AnyObject {
         
         // draw line (from center to out)
         for index in 0..<numberOfValue {
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
-            label.adjustsFontSizeToFitWidth = true
-            label.textAlignment = .center
-            label.textColor = valueLabelTextColor
+            let label = makeLabel(length: length)
             label.text = dataSource.meterView(self, valueForIndex: index)
             label.font = adjustFont(rect: label.frame)
             meterView.addSubview(label)
-            let point = CGPoint(x: centerPoint.x + smallRadius * CGFloat(cosf(angle)),
-                                y: centerPoint.y + smallRadius * CGFloat(sinf(angle)))
+            let point = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
+                                y: meterCenter.y + smallRadius * CGFloat(sinf(angle)))
             label.center = point
             angle += angleUnit
         }
     }
     
-    private func prepareValueHandLayer() {
-        valueHandLayer = CAShapeLayer()
-        guard let drawLayer = drawLayer,
-            let valueHandLayer = valueHandLayer else {
-            return
+    private func makeLabel(length: CGFloat) -> UILabel {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .center
+        label.textColor = valueLabelTextColor
+        return label
+    }
+    
+    // MARK:- Make Layer
+    private func makeDrawLayer() -> CAShapeLayer {
+        let drawLayer = CAShapeLayer()
+        drawLayer.frame = meterView.bounds
+        drawLayer.cornerRadius = radius
+        drawLayer.masksToBounds = true
+        drawLayer.borderWidth = meterBorderLineWidth
+        drawLayer.borderColor = meterBorderLineColor.cgColor
+        return drawLayer
+    }
+    
+    private func makeValueIndexLayer() -> CAShapeLayer {
+        let layer = CAShapeLayer()
+        layer.frame = drawLayer!.bounds
+        layer.strokeColor = valueIndexColor.cgColor
+        layer.fillColor = UIColor.clear.cgColor
+        
+        var angle: Float = Float(Double.pi/2 + Double.pi)
+        let smallRadius = radius - (radius/10 + meterBorderLineWidth)
+        
+        let path = UIBezierPath()
+        let angleUnit = (numberOfValue > 0) ? Float(Double.pi*2) / Float(numberOfValue) : 0.0
+        
+        // draw line (from center to out)
+        for _ in 0..<numberOfValue {
+            let start = CGPoint(x: meterCenter.x + radius * CGFloat(cosf(angle)),
+                                y: meterCenter.y + radius * CGFloat(sinf(angle)))
+            path.move(to: start)
+            let end = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
+                              y: meterCenter.y + smallRadius * CGFloat(sinf(angle)))
+            path.addLine(to: end)
+            
+            angle += angleUnit
         }
         
-        valueHandLayer.frame = drawLayer.bounds
-        drawLayer.addSublayer(valueHandLayer)
+        layer.lineWidth = valueIndexWidth
+        layer.path = path.cgPath
+        return layer
+    }
+    
+    private func makeValueHandLayer() -> CAShapeLayer {
+        let valueHandLayer = CAShapeLayer()
+        valueHandLayer.frame = drawLayer!.bounds
         valueHandLayer.strokeColor = valueHandColor.cgColor
         valueHandLayer.fillColor = UIColor.clear.cgColor
         
-        let angle: Float = Float(Double.pi/2 + Double.pi)
-        
-        let radius = meterView.frame.width/2
-        let length = radius * 0.8
-        let centerPoint = CGPoint(x: radius, y: radius)
-        
-        let path = UIBezierPath()
-        let point = CGPoint(x: centerPoint.x + length * CGFloat(cosf(angle)),
-                            y: centerPoint.y + length * CGFloat(sinf(angle)))
-        path.move(to: centerPoint)
-        path.addLine(to: point)
-        
+        let angle = Float(Double.pi/2 + Double.pi)
         valueHandLayer.lineWidth = valueHandWidth
-        valueHandLayer.path = path.cgPath
+        valueHandLayer.path = makeHandPath(angle: angle).cgPath
+        return valueHandLayer
     }
     
-    private func preparePanGesture() {
-        guard let drawLayer = drawLayer else {
-            return
-        }
-        
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(self.panAction(gesture:)))
-        meterView.addGestureRecognizer(pan)
-        let radius = meterView.frame.width/2
-        let centerPoint = CGPoint(x: radius, y: radius)
-        
-        let path = UIBezierPath(ovalIn: CGRect(x: centerPoint.x - radius,
-                                               y: centerPoint.y - radius,
+    private func makeHandPath(angle: Float) -> UIBezierPath {
+        let path = UIBezierPath()
+        let point = CGPoint(x: meterCenter.x + handLength * CGFloat(cosf(angle)),
+                            y: meterCenter.y + handLength * CGFloat(sinf(angle)))
+        path.move(to: meterCenter)
+        path.addLine(to: point)
+        return path
+    }
+    
+    private func makePanLayer() -> CAShapeLayer {
+        let path = UIBezierPath(ovalIn: CGRect(x: meterCenter.x - radius,
+                                               y: meterCenter.y - radius,
                                                width: radius * 2,
                                                height: radius * 2))
         
-        panLayer = CAShapeLayer()
-        guard let panLayer = panLayer else {
-            return
-        }
-        
-        panLayer.frame = drawLayer.bounds
-        drawLayer.insertSublayer(panLayer, at: 0)
+        let panLayer = CAShapeLayer()
+        panLayer.frame = drawLayer!.bounds
         panLayer.strokeColor = UIColor.clear.cgColor
         panLayer.fillColor = meterColor.cgColor
         panLayer.path = path.cgPath
+        return panLayer
     }
     
     //MARK:- Gesture Action
@@ -243,31 +225,21 @@ public protocol AMMeterViewDelegate: AnyObject {
         delegate?.meterView(self, didSelectAtIndex: Int(index))
     }
     
-    //MARK:- Draw ValueHand
+    // MARK:- Draw ValueHand
     private func drawValueHandLayer(angle: Float) {
         guard let valueHandLayer = valueHandLayer else {
             return
         }
         
-        let radius = meterView.frame.width/2
-        let length = radius * 0.8
-        let centerPoint = CGPoint(x: radius, y: radius)
-        
-        let path = UIBezierPath()
-        let point = CGPoint(x: centerPoint.x + length * CGFloat(cosf(angle)),
-                            y: centerPoint.y + length * CGFloat(sinf(angle)))
-        path.move(to: centerPoint)
-        path.addLine(to: point)
-        
         CATransaction.begin()
         CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        valueHandLayer.path = path.cgPath
+        valueHandLayer.path = makeHandPath(angle: angle).cgPath
         CATransaction.commit()
     }
     
-    //MARK:- Calculate
+    // MARK:- Calculate
     private func calculateValueAngle(radian: Float) -> Float {
-        let index: Int = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
+        let index = Int((radian - Float(Double.pi/2 + Double.pi)) / (Float(Double.pi*2) / Float(numberOfValue)))
         let angle: Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
@@ -296,17 +268,16 @@ public protocol AMMeterViewDelegate: AnyObject {
     }
     
     private func calculateAngle(index: Int) -> Float {
-        let angle: Float = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
+        let angle = (Float(Double.pi*2) / Float(numberOfValue)) * Float(index)
         return angle + Float(Double.pi/2 + Double.pi)
     }
     
     private func adjustFont(rect: CGRect) -> UIFont {
-        let length: CGFloat = (rect.width > rect.height) ? rect.height : rect.width
-        let font = UIFont.systemFont(ofSize: length * 0.8)
-        return font
+        let length = (rect.width > rect.height) ? rect.height : rect.width
+        return .systemFont(ofSize: length * 0.8)
     }
     
-    //MARK:- Clear/Reload
+    // MARK:- Clear/Reload
     private func clear() {
         meterView.subviews.forEach{$0.removeFromSuperview()}
         meterView.removeFromSuperview()
@@ -325,12 +296,20 @@ public protocol AMMeterViewDelegate: AnyObject {
         }
         
         prepareMeterView()
-        prepareDrawLayer()
-        prepareValueIndexLayer()
+        drawLayer = makeDrawLayer()
+        meterView.layer.addSublayer(drawLayer!)
+        drawLayer!.addSublayer(makeValueIndexLayer())
+        
         prepareValueLabel()
         
-        preparePanGesture()
-        prepareValueHandLayer()
+        let pan = UIPanGestureRecognizer(target: self,
+                                         action: #selector(self.panAction(gesture:)))
+        meterView.addGestureRecognizer(pan)
+        panLayer = makePanLayer()
+        drawLayer!.insertSublayer(panLayer!, at: 0)
+        
+        valueHandLayer = makeValueHandLayer()
+        drawLayer!.addSublayer(valueHandLayer!)
     }
     
     public func select(index: Int) {
