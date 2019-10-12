@@ -310,7 +310,7 @@ internal class AMMeterModel {
         drawLayer!.addSublayer(valueHandLayer!)
     }
     
-    public func select(index: Int) {
+    public func selectValue(at index: Int) {
         precondition(model.numberOfValue > index)
         model.currentAngle = model.calculateAngle(index: index)
         drawValueHandLayer(angle: model.currentAngle)
