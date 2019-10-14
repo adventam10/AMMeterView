@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = "AMMeterView"
-    s.version      = "2.1"
+    s.version      = "2.1.1"
     s.summary      = "AMMeterView is a view can select value."
     s.license      = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage     = "https://github.com/adventam10/AMMeterView"
