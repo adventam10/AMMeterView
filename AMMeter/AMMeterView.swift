@@ -14,11 +14,16 @@ public protocol AMMeterViewDataSource: AnyObject {
     func meterView(_ meterView: AMMeterView, titleForValueAtIndex index: Int) -> String
     // MARK:- Optional
     func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor
+    func meterView(_ meterView: AMMeterView, textFontForValueAtIndex index: Int) -> UIFont
 }
 
 public extension AMMeterViewDataSource {
     func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor {
         return .black
+    }
+    
+    func meterView(_ meterView: AMMeterView, textFontForValueAtIndex index: Int) -> UIFont {
+        return .systemFont(ofSize: 15)
     }
 }
 
@@ -42,11 +47,6 @@ internal class AMMeterModel {
     
     let angle270 = Float(Double.pi + Double.pi/2)
     let angle360 = Float(Double.pi*2)
-    
-    func adjustFont(rect: CGRect) -> UIFont {
-        let length = (rect.width > rect.height) ? rect.height : rect.width
-        return .systemFont(ofSize: length * 0.8)
-    }
     
     func calculateValueAngle(point: CGPoint, radius: CGFloat) -> Float {
         let angle = calculateRadian(point: point, radius: radius)
@@ -156,30 +156,32 @@ internal class AMMeterModel {
             return
         }
         
-        var angle = model.angle270
-        var smallRadius = radius - (radius/10 + meterBorderLineWidth)
-        let length = radius/4
-        smallRadius -= length/2
-        
-        // draw line (from center to out)
+        var labels = [UILabel]()
         for index in 0..<model.numberOfValue {
-            let label = makeLabel(length: length)
+            let label = makeLabel()
             label.text = dataSource.meterView(self, titleForValueAtIndex: index)
             label.textColor = dataSource.meterView(self, textColorForValueAtIndex: index)
-            label.font = model.adjustFont(rect: label.frame)
+            label.font = dataSource.meterView(self, textFontForValueAtIndex: index)
+            label.sizeToFit()
             meterView.addSubview(label)
-            let point = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
+            labels.append(label)
+        }
+        
+        var angle = model.angle270
+        var smallRadius = radius - (radius/10 + meterBorderLineWidth)
+        let maxWidthLabel = labels.sorted { $0.frame.width > $1.frame.width }.first!
+        smallRadius -= (maxWidthLabel.frame.width/2 + 2)
+        labels.forEach {
+            $0.center = CGPoint(x: meterCenter.x + smallRadius * CGFloat(cosf(angle)),
                                 y: meterCenter.y + smallRadius * CGFloat(sinf(angle)))
-            label.center = point
             angle += model.angleUnit
         }
     }
     
-    private func makeLabel(length: CGFloat) -> UILabel {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: length, height: length))
-        label.adjustsFontSizeToFitWidth = true
+    private func makeLabel() -> UILabel {
+        let label = UILabel(frame: .zero)
         label.textAlignment = .center
-        label.baselineAdjustment = .alignCenters
+        label.numberOfLines = 0
         return label
     }
     

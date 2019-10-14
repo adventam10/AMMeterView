@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     
     let meterList1 = ["0", "5", "10", "15", "20", "30"]
     let meterList2 = ["A", "B", "C", "D", "E", "F", "G", "H"]
-    let meterList3 = ["りんご", "バナナ", "メロン"]
+    let meterList3 = ["りんご", "バナナ", "メロン", "グレープ\nフルーツ", "ドラゴン\nフルーツ"]
     let colors: [UIColor] = [.black, .red, .blue, .magenta, .purple, .orange, .brown, .white]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,13 +69,20 @@ extension ViewController: AMMeterViewDelegate, AMMeterViewDataSource {
         } else if meterView == mView2 {
             label2.text = "selected value: " + list[index]
         } else if meterView == mView3 {
-            label3.text = "selected value: " + list[index]
+            label3.text = "selected value: " + list[index].replacingOccurrences(of: "\n", with: "")
             mView1.selectValue(at: 3)
         }
     }
     
     func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor {
         return meterView == mView2 ? colors[index] : .black
+    }
+    
+    func meterView(_ meterView: AMMeterView, textFontForValueAtIndex index: Int) -> UIFont {
+        if meterView != mView3 {
+            return .systemFont(ofSize: 15)
+        }
+        return  index == 4 ? .boldSystemFont(ofSize: 10) : .systemFont(ofSize: 15)
     }
 }
 

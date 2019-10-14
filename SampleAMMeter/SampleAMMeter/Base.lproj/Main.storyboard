@@ -30,7 +30,7 @@
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IQP-nw-Yc1" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
                                                 <rect key="frame" x="50" y="20.5" width="100" height="100"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="750" constant="100" id="Q8e-7Y-P4s"/>
                                                     <constraint firstAttribute="width" secondItem="IQP-nw-Yc1" secondAttribute="height" multiplier="1:1" id="duR-65-yda"/>
@@ -50,7 +50,7 @@
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3h-rW-kzB" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
                                                 <rect key="frame" x="25" y="20.5" width="150" height="150"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="A3h-rW-kzB" secondAttribute="height" multiplier="1:1" id="Hzb-hU-KFb"/>
                                                     <constraint firstAttribute="width" priority="750" constant="150" id="b9z-5X-gwA"/>
@@ -84,7 +84,7 @@
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XY3-UY-mmS" customClass="AMMeterView" customModule="SampleAMMeter" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="20.5" width="200" height="200"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="750" constant="200" id="9Aa-YV-gKY"/>
                                                     <constraint firstAttribute="width" secondItem="XY3-UY-mmS" secondAttribute="height" multiplier="1:1" id="kYy-TC-YBF"/>
@@ -104,7 +104,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="EoN-Wf-W2Y" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="1HI-Yy-wsH"/>
                             <constraint firstItem="EoN-Wf-W2Y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="WOH-Sj-VU1"/>
