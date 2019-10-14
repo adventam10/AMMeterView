@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E407A3B235463CF0096FA4A /* AMMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E407A3A235463CF0096FA4A /* AMMeterView.swift */; };
 		0E475328201F0A93002EA382 /* AMMeterView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E475326201F0A93002EA382 /* AMMeterView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0E475338201F0B1F002EA382 /* AMMeterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E475337201F0B1F002EA382 /* AMMeterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E407A3A235463CF0096FA4A /* AMMeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMMeterView.swift; sourceTree = "<group>"; };
 		0E475323201F0A93002EA382 /* AMMeterView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AMMeterView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E475326201F0A93002EA382 /* AMMeterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AMMeterView.h; sourceTree = "<group>"; };
 		0E475327201F0A93002EA382 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E475337201F0B1F002EA382 /* AMMeterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMMeterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,10 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E407A39235463CF0096FA4A /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				0E407A3A235463CF0096FA4A /* AMMeterView.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		0E475319201F0A93002EA382 = {
 			isa = PBXGroup;
 			children = (
-				0E475336201F0B1F002EA382 /* AMMeter */,
+				0E407A39235463CF0096FA4A /* Source */,
 				0E475325201F0A93002EA382 /* AMMeterView */,
 				0E475324201F0A93002EA382 /* Products */,
 			);
@@ -53,14 +61,6 @@
 				0E475327201F0A93002EA382 /* Info.plist */,
 			);
 			path = AMMeterView;
-			sourceTree = "<group>";
-		};
-		0E475336201F0B1F002EA382 /* AMMeter */ = {
-			isa = PBXGroup;
-			children = (
-				0E475337201F0B1F002EA382 /* AMMeterView.swift */,
-			);
-			path = AMMeter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,7 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E475338201F0B1F002EA382 /* AMMeterView.swift in Sources */,
+				0E407A3B235463CF0096FA4A /* AMMeterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
