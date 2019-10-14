@@ -33,7 +33,8 @@ Conform to the protocol in the class implementation.
 func numberOfValue(in meterView: AMMeterView) -> Int
 func meterView(_ meterView: AMMeterView, titleForValueAtIndex index: Int) -> String
 // Optional
-func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor
+func meterView(_ meterView: AMMeterView, textColorForValueAtIndex index: Int) -> UIColor // default is black
+func meterView(_ meterView: AMMeterView, textFontForValueAtIndex index: Int) -> UIFont // default is System 15.0
 
 /// Delegate
 func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) { 
@@ -54,13 +55,14 @@ func meterView(_ meterView: AMMeterView, didSelectAtIndex index: Int) {
 @IBInspectable public var valueIndexColor: UIColor = .black
 ```
 
-![meter](https://user-images.githubusercontent.com/34936885/66704526-a81e3380-ed57-11e9-8f63-affdb3b3ed35.png)
+![meter](https://user-images.githubusercontent.com/34936885/66727449-3db1e400-ee7a-11e9-8003-217c14ebb2ef.png)
 
 ## Installation
 
 ### CocoaPods
 
 Add this to your Podfile.
+
 ```ogdl
 pod 'AMMeterView'
 ```
